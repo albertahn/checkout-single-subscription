@@ -4,9 +4,10 @@ const { resolve } = require("path");
 // Copy the .env.example in the root into a .env file in this folder
 
 const env = require("dotenv").config({ path: "./.env" });
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY_TEST);
 
-app.use(express.static(process.env.STATIC_DIR));
+//app.use(express.static(process.env.STATIC_DIR));
+app.use(express.static(__dirname + '/public'));
 app.use(
   express.json({
     // We need the raw body to verify webhook signatures.
@@ -20,7 +21,8 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  const path = resolve(process.env.STATIC_DIR + "/index.html");
+  //const path = resolve(process.env.STATIC_DIR + "/index.html");
+  const path = resolve(__dirname + "/../../client/index.html");
   res.sendFile(path);
 });
 
@@ -62,7 +64,7 @@ app.post("/create-checkout-session", async (req, res) => {
 
 app.get("/setup", (req, res) => {
   res.send({
-    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+    publishableKey: process.env.STRIPE_PUBLIC_KEY_TEST,
     basicPrice: process.env.BASIC_PRICE_ID,
     proPrice: process.env.PRO_PRICE_ID,
   });
